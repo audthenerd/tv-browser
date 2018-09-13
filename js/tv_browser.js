@@ -1,34 +1,15 @@
 // API Docs at:
 // http://www.tvmaze.com/api
 var input;
+var responseArr = [];
+var response;
 
-
-var userResults = function() {
-    var browseId = document.createElement('div');
-    browseId.setAttribute('id', 'browse-here');
-
-    var searchId = document.createElement('div');
-    searchId.setAttribute('id', 'search-form');
-    browseId.appendChild(searchId);
-
-
-    var input = document.createElement('input');
-    input.setAttribute('id', 'show-search');
-    input.setAttribute('type', 'search');
-    input.setAttribute('placeholder', 'Search for a title....');
-    searchId.appendChild(input);
-
-    var button = document.createElement('button');
-    button.textContent = "Submit";
-    input.appendChild(button);
-};
-
-var changeStyle = function() {
-    document.querySelector('input').style.width = "20em";
-    document.getElementById('search-form').style.fontSize = "200%";
-   document.getElementById('search-form').style.margin = "20em";
-   document.querySelectorAll('a').style.color = "#c00";
-}
+// var changeStyle = function() {
+//     document.querySelector('input').style.width = "20em";
+//     document.getElementById('search-form').style.fontSize = "200%";
+//    document.getElementById('search-form').style.margin = "20em";
+//    document.querySelectorAll('a').style.color = "#c00";
+// }
 
 var responseHandler = function() {
   console.log("response text", this.responseText);
@@ -44,21 +25,20 @@ var responseHandler = function() {
   console.log("response text", this.responseText);
   var response = JSON.parse( this.responseText );
   console.log( response );
-
-getShows(response);
-};
-
-userResults();
-changeStyle();
-
-var input = document.querySelector('#show-search');
-var url = "http://api.tvmaze.com/search/shows?q="+input.value;
+}; responseArr = response;
 
 
-var getShows = function(arr){
-    for (var i=0;i<arr.length;i++){
-        if(arr[i].show.name === input.value){
-           return arr[i];
+var showDetail= document.getElementById('show-detail');
+var showsListHead = document.createElement('ul');
+showDetail.appendChild(showsList);
+
+var getShows = function(event){
+    for (var i=0;i<responseArr.length;i++){
+        if(responseArr[i].show.name === this.value){
+            var showsList = document.createElement('li');
+            showsListHead.appendChild(showsList);
+            var showsArr = responseArr[i].shows;
+            showsList.innerHTML = `Name: ${showsArr.name}, Summary: ${showsArr.Summary}`
         }
      }
 };
