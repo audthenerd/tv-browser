@@ -26,6 +26,12 @@ input[type="search"] {
   margin: 1em;
 }
 
+#show-select{
+	visibility: hidden;
+}
+
+
+
 select {
   font-size: 150%;
 }

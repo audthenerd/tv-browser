@@ -1,15 +1,26 @@
 // API Docs at:
 // http://www.tvmaze.com/api
-var input;
-var responseArr = [];
-var response;
+// window.onload = function(){
 
-// var changeStyle = function() {
-//     document.querySelector('input').style.width = "20em";
-//     document.getElementById('search-form').style.fontSize = "200%";
-//    document.getElementById('search-form').style.margin = "20em";
-//    document.querySelectorAll('a').style.color = "#c00";
+var input = document.querySelector('#show-search');
+var options = document.querySelector('option');
+var select = document.getElementById('show-select');
+var showDetail= document.getElementById('show-detail');
+
+var response;
+var coverOption;
+
+// var result;
+
+// function myFunction() {
+//     result = "hello world";
 // }
+
+// myFunction();
+// console.log(result);
+
+
+
 
 var responseHandler = function() {
   console.log("response text", this.responseText);
@@ -21,36 +32,23 @@ var responseHandler = function() {
 // make a new request
 var request = new XMLHttpRequest();
 
+//This gets the response.
 var responseHandler = function() {
   console.log("response text", this.responseText);
-  var response = JSON.parse( this.responseText );
+  response = JSON.parse( this.responseText );
   console.log( response );
-}; responseArr = response;
+  responseArr = response;
 
-
-var showDetail= document.getElementById('show-detail');
-var showsListHead = document.createElement('ul');
-showDetail.appendChild(showsList);
-
-var getShows = function(event){
-    for (var i=0;i<responseArr.length;i++){
-        if(responseArr[i].show.name === this.value){
-            var showsList = document.createElement('li');
-            showsListHead.appendChild(showsList);
-            var showsArr = responseArr[i].shows;
-            showsList.innerHTML = `Name: ${showsArr.name}, Summary: ${showsArr.Summary}`
-        }
-     }
+    hidePrevious();
+    showList(response);
 };
 
 
-
+//To get the data from the server.
 var doSubmit = function(event){
 
-
-
 var input = document.querySelector('#show-search');
-var url = "http://api.tvmaze.com/search/shows?q="+input.value;
+var url = "http://api.tvmaze.com/search/shows?q="+ input.value;
     // listen for the request response
     request.addEventListener("load", responseHandler);
 
@@ -61,7 +59,74 @@ var url = "http://api.tvmaze.com/search/shows?q="+input.value;
     request.send();
 };
 
+
+
+//function to clear previous filled options.
+var hidePrevious = function() {
+while (select.options.length>1){
+    select.innerHTML = "";
+}
+}
+
+
+//For drop-down list to select shows in options bar.
+
+
+
+var showList = function(item) {
+
+var showsArr = [];
+
+var showSelect = document.getElementById('show-select');
+
+    for(i=0; i<item.length; i++){
+        showsArr.push(item[i].show.name);
+
+        var dropDown = document.createElement('option');
+        dropDown.setAttribute('value', item[i].show.name);
+        dropDown.textContent = item[i].show.name;
+
+        showSelect.appendChild(dropDown);
+        select.style.visibility = "visible";
+
+    }
+        var coverOption = document.querySelector('option');
+        coverOption.textContent = "Shows matching " + input.value + "...";
+        showSelect.style.display="block";
+
+        return showsArr;
+
+}
+
+
+
+var renderShow = function() {
+    for(i=0; i<response.length; i++){
+
+    if (response[i].show.name === select.value ){
+
+        var info = document.createElement('p');
+        info.setAttribute('value', response[i].show.name);
+        info.textContent = response[i].show.name;
+        showDetail.appendChild(info);
+
+        var image = document.createElement('img');
+        image.setAttribute('src', response[i].show.image.medium);
+        info.appendChild(image);
+
+
+
+    }
+    }
+};
+
+
+
+
 document.querySelector('button').addEventListener('click', doSubmit);
+select.addEventListener('change', renderShow);
+
+
 
 
 var requestFailed = function(){
@@ -74,20 +139,4 @@ request.addEventListener("error", requestFailed);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// }
